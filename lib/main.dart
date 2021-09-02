@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_aplikasi_catatan_keuangan_app/constants.dart';
+import 'package:flutter_aplikasi_catatan_keuangan_app/ui/home/home_page.dart';
+import 'package:flutter_aplikasi_catatan_keuangan_app/ui/report/report_page.dart';
+import 'package:flutter_aplikasi_catatan_keuangan_app/ui/setting/setting_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,143 +14,266 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Aplikasi Catatan Keuangan',
-      theme: ThemeData(primaryColor: kPrimaryColor),
-      home: HomePage(),
+      theme: ThemeData(
+        primaryColor: kPrimaryColor,
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: kPrimaryColor,
+        ),
+      ),
+      home: MainPage(),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class MainPage extends StatefulWidget {
+  const MainPage({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _MainPageState createState() => _MainPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _MainPageState extends State<MainPage> {
+  int _currentIndex = 2;
+
+  List<Widget> _pages = [
+    HomePage(),
+    ReportPage(),
+    SettingPage(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('KeuanganKu'),
-      //   elevation: 0,
-      // ),
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              Container(
-                height: 200,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(
-                      35.0,
-                    ),
-                    bottomRight: Radius.circular(
-                      35.0,
-                    ),
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _pages,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        backgroundColor: Colors.white,
+        selectedItemColor: kPrimaryColor,
+        selectedFontSize: 12.0,
+        elevation: 8.0,
+        iconSize: 18.0,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.home,
+            ),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.trending_up_outlined,
+            ),
+            label: 'Laporan',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.settings,
+            ),
+            label: 'Settings',
+          ),
+        ],
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+      ),
+      // bottomNavigationBar: BottomNavigationBar(items: []),
+    );
+  }
+}
+
+class PreviousTransactionItem2 extends StatelessWidget {
+  const PreviousTransactionItem2({
+    Key? key,
+    required this.upperText,
+    required this.bottomText,
+  }) : super(key: key);
+  final String upperText;
+  final String bottomText;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: ListTile(
+        leading: Container(
+          width: 80.0,
+          padding: const EdgeInsets.symmetric(
+            horizontal: 8.0,
+            vertical: 4.0,
+          ),
+          decoration: BoxDecoration(
+            color: kPrimaryColor,
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: '$upperText\n',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
                   ),
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomLeft,
-                    end: Alignment.topRight,
-                    colors: [
-                      kPrimaryColor,
-                      kDarkPrimaryColor,
+                ),
+                TextSpan(
+                  text: '$bottomText',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w300,
+                    fontSize: 12.0,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+        title: Row(
+          children: [
+            SizedBox(width: 16.0),
+            Expanded(
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Pemasukan',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      Text(
+                        'Rp. 120.000',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                          color: kIncomeColor,
+                        ),
+                      ),
                     ],
                   ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 30.0, left: 16.0),
-                  child: Text(
-                    'KeuanganKu',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 22,
-                      fontWeight: FontWeight.w100,
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-          Column(
-            children: [
-              SizedBox(height: 150),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Container(
-                  width: double.infinity,
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          Text('Hari ini, 18 Oktober 2021'),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Column(children: [
-                                Text('pemasukan'),
-                                Text('Rp. 120.000')
-                              ]),
-                              Column(
-                                children: [
-                                  Text('pengeluaran'),
-                                  Text('Rp. 50.000')
-                                ],
-                              )
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              Text('Selisih'),
-                              Text('Rp. 70.000'),
-                            ],
-                          )
-                        ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Pengeluaran',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 14.0,
+                        ),
                       ),
-                    ),
-                  ),
-                ),
+                      Text(
+                        'Rp. 120.000',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                          color: kOutomeColor,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
               ),
-              SizedBox(height: 20),
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class HightlightItem extends StatelessWidget {
+  const HightlightItem({Key? key, required this.title}) : super(key: key);
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [],
+    );
+  }
+}
+
+class TransactionItem2 extends StatelessWidget {
+  const TransactionItem2({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10.0),
+      padding: const EdgeInsets.symmetric(
+        vertical: 8.0,
+        horizontal: 16.0,
+      ),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 0,
+              spreadRadius: 0.02,
+              offset: Offset(0, 2), // Shadow position
+            ),
+          ]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Beli bahan-bahan masakan didapur',
+            style: TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: 2.0,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25.0),
+                  color: kPrimaryColor,
+                ),
+                child: Row(
                   children: [
-                    Container(
-                      decoration: BoxDecoration(color: Colors.red),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text('Beli bahan-bahan masakan didapur'),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Text('Belanja bulanan'),
-                              Text('Rp. 100.000'),
-                            ],
-                          )
-                        ],
+                    Icon(
+                      Icons.money,
+                      color: Colors.white,
+                      size: 14.0,
+                    ),
+                    SizedBox(width: 4.0),
+                    Text(
+                      'Belanja bulanan',
+                      style: TextStyle(
+                        fontSize: 12.0,
+                        color: Colors.white,
                       ),
-                    )
+                    ),
                   ],
                 ),
-              )
+              ),
+              Text(
+                'Rp. 100.000',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Color(0xFF4CAF50),
+                ),
+              ),
             ],
           )
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print('fab');
-        },
-        child: Icon(Icons.add),
-      ),
-      // bottomNavigationBar: BottomNavigationBar(items: []),
     );
   }
 }
