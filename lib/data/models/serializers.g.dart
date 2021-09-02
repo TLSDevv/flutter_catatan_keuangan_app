@@ -7,6 +7,8 @@ part of serializers;
 // **************************************************************************
 
 Serializers _$serializers = (new Serializers().toBuilder()
+      ..add(AuthResultFailed.serializer)
+      ..add(AuthResultSuccess.serializer)
       ..add(CategoryItem.serializer)
       ..add(TransactionItem.serializer)
       ..add(TransactionResult.serializer)
