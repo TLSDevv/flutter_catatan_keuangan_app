@@ -18,14 +18,17 @@ class AuthApi {
   ///
   /// Throws an [UnknownErrorException] if server not returns either **200 OK** or **401 Unauthorized**.
   /// For example server returns **500 Internal Server Error**, we will classify this as *unknown error*.
-  Future<AuthResultSuccess?> login(LoginData loginData) async {
+  Future<AuthResultSuccess?> login({
+    required String user,
+    required String pass,
+  }) async {
     final uriEncoded = Uri.https('$BASE_URL', '/auth/login');
     final headers = {
       HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8'
     };
     final body = <String, String>{
-      'username': loginData.username,
-      'password': loginData.password
+      'username': user,
+      'password': pass,
     };
     final response = await _http.post(
       uriEncoded,
@@ -98,16 +101,20 @@ class AuthApi {
   ///
   /// Throws an [UnknownErrorException] if server not returns either **200 OK** or **401 Unauthorized**.
   /// For example server returns **500 Internal Server Error**, we will classify this as *unknown error*.
-  Future<AuthResultSuccess?> register(RegisterData registerData) async {
+  Future<AuthResultSuccess?> register({
+    required String user,
+    required String email,
+    required String pass,
+  }) async {
     final uriEncoded = Uri.https('$BASE_URL', '/auth/register');
     final headers = {
       HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8'
     };
 
     final body = <String, String>{
-      'username': registerData.username,
-      'email': registerData.email,
-      'password': registerData.password
+      'username': user,
+      'email': email,
+      'password': pass,
     };
     final response = await _http.post(
       uriEncoded,

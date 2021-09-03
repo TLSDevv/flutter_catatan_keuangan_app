@@ -49,18 +49,19 @@ void main() {
       );
 
       final loginResponse = await _authApi.login(
-        LoginData(
-          (b) => b
-            ..username = 'test_user'
-            ..password = '12345',
-        ),
+        user: 'test_user',
+        pass: '12345',
       );
 
       expect(loginResponse, TypeMatcher<AuthResultSuccess>());
       expect(loginResponse?.success, isTrue);
       expect(loginResponse?.message, equals('Login successful'));
       expect(
-        loginResponse?.tokenAuth,
+        loginResponse?.authToken,
+        startsWith('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9'),
+      );
+      expect(
+        loginResponse?.refreshToken,
         startsWith('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9'),
       );
 
@@ -96,11 +97,11 @@ void main() {
         ),
       );
 
-      final loginData = LoginData((b) => b
-        ..username = 'test_user'
-        ..password = '12345');
-
-      expect(() async => await _authApi.login(loginData),
+      expect(
+          () async => await _authApi.login(
+                user: 'test_user',
+                pass: '12345',
+              ),
           throwsA(TypeMatcher<UnauthorizedException>()));
 
       verify(
@@ -136,11 +137,11 @@ void main() {
         ),
       );
 
-      final loginData = LoginData((b) => b
-        ..username = 'test_user'
-        ..password = '12345');
-
-      expect(() async => await _authApi.login(loginData),
+      expect(
+          () async => await _authApi.login(
+                user: 'test_user',
+                pass: '12345',
+              ),
           throwsA(TypeMatcher<UnknownErrorException>()));
 
       verify(
@@ -365,19 +366,20 @@ void main() {
       );
 
       final registerResponse = await _authApi.register(
-        RegisterData(
-          (b) => b
-            ..username = 'test_user'
-            ..email = 'test@example.com'
-            ..password = '12345',
-        ),
+        user: 'test_user',
+        email: 'test@example.com',
+        pass: '12345',
       );
 
       expect(registerResponse, TypeMatcher<AuthResultSuccess>());
       expect(registerResponse?.success, isTrue);
       expect(registerResponse?.message, equals('Register successful.'));
       expect(
-        registerResponse?.tokenAuth,
+        registerResponse?.authToken,
+        startsWith('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9'),
+      );
+      expect(
+        registerResponse?.refreshToken,
         startsWith('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9'),
       );
 
@@ -418,12 +420,9 @@ void main() {
 
       expect(
           () async => await _authApi.register(
-                RegisterData(
-                  (b) => b
-                    ..username = 'test_user'
-                    ..email = 'test@example.com'
-                    ..password = '12345',
-                ),
+                user: 'test_user',
+                email: 'test@example.com',
+                pass: '12345',
               ),
           throwsA(TypeMatcher<UnknownErrorException>()));
 

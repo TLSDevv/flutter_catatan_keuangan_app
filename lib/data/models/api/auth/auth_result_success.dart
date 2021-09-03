@@ -12,8 +12,10 @@ abstract class AuthResultSuccess
     implements Built<AuthResultSuccess, AuthResultSuccessBuilder> {
   bool? get success;
   String? get message;
-  @BuiltValueField(wireName: 'token_auth')
-  String? get tokenAuth;
+  @BuiltValueField(wireName: 'auth_token')
+  String? get authToken;
+  @BuiltValueField(wireName: 'refresh_token')
+  String? get refreshToken;
 
   AuthResultSuccess._();
 

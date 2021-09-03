@@ -35,10 +35,17 @@ class _$AuthResultSuccessSerializer
         ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
-    value = object.tokenAuth;
+    value = object.authToken;
     if (value != null) {
       result
-        ..add('token_auth')
+        ..add('auth_token')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
+    value = object.refreshToken;
+    if (value != null) {
+      result
+        ..add('refresh_token')
         ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
@@ -65,8 +72,12 @@ class _$AuthResultSuccessSerializer
           result.message = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
           break;
-        case 'token_auth':
-          result.tokenAuth = serializers.deserialize(value,
+        case 'auth_token':
+          result.authToken = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String?;
+          break;
+        case 'refresh_token':
+          result.refreshToken = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
           break;
       }
@@ -82,13 +93,16 @@ class _$AuthResultSuccess extends AuthResultSuccess {
   @override
   final String? message;
   @override
-  final String? tokenAuth;
+  final String? authToken;
+  @override
+  final String? refreshToken;
 
   factory _$AuthResultSuccess(
           [void Function(AuthResultSuccessBuilder)? updates]) =>
       (new AuthResultSuccessBuilder()..update(updates)).build();
 
-  _$AuthResultSuccess._({this.success, this.message, this.tokenAuth})
+  _$AuthResultSuccess._(
+      {this.success, this.message, this.authToken, this.refreshToken})
       : super._();
 
   @override
@@ -105,13 +119,16 @@ class _$AuthResultSuccess extends AuthResultSuccess {
     return other is AuthResultSuccess &&
         success == other.success &&
         message == other.message &&
-        tokenAuth == other.tokenAuth;
+        authToken == other.authToken &&
+        refreshToken == other.refreshToken;
   }
 
   @override
   int get hashCode {
     return $jf($jc(
-        $jc($jc(0, success.hashCode), message.hashCode), tokenAuth.hashCode));
+        $jc($jc($jc(0, success.hashCode), message.hashCode),
+            authToken.hashCode),
+        refreshToken.hashCode));
   }
 
   @override
@@ -119,7 +136,8 @@ class _$AuthResultSuccess extends AuthResultSuccess {
     return (newBuiltValueToStringHelper('AuthResultSuccess')
           ..add('success', success)
           ..add('message', message)
-          ..add('tokenAuth', tokenAuth))
+          ..add('authToken', authToken)
+          ..add('refreshToken', refreshToken))
         .toString();
   }
 }
@@ -136,9 +154,13 @@ class AuthResultSuccessBuilder
   String? get message => _$this._message;
   set message(String? message) => _$this._message = message;
 
-  String? _tokenAuth;
-  String? get tokenAuth => _$this._tokenAuth;
-  set tokenAuth(String? tokenAuth) => _$this._tokenAuth = tokenAuth;
+  String? _authToken;
+  String? get authToken => _$this._authToken;
+  set authToken(String? authToken) => _$this._authToken = authToken;
+
+  String? _refreshToken;
+  String? get refreshToken => _$this._refreshToken;
+  set refreshToken(String? refreshToken) => _$this._refreshToken = refreshToken;
 
   AuthResultSuccessBuilder();
 
@@ -147,7 +169,8 @@ class AuthResultSuccessBuilder
     if ($v != null) {
       _success = $v.success;
       _message = $v.message;
-      _tokenAuth = $v.tokenAuth;
+      _authToken = $v.authToken;
+      _refreshToken = $v.refreshToken;
       _$v = null;
     }
     return this;
@@ -168,7 +191,10 @@ class AuthResultSuccessBuilder
   _$AuthResultSuccess build() {
     final _$result = _$v ??
         new _$AuthResultSuccess._(
-            success: success, message: message, tokenAuth: tokenAuth);
+            success: success,
+            message: message,
+            authToken: authToken,
+            refreshToken: refreshToken);
     replace(_$result);
     return _$result;
   }
