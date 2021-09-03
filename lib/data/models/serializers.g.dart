@@ -7,6 +7,7 @@ part of serializers;
 // **************************************************************************
 
 Serializers _$serializers = (new Serializers().toBuilder()
+      ..add(AuthCheckResult.serializer)
       ..add(AuthResultFailed.serializer)
       ..add(AuthResultSuccess.serializer)
       ..add(CategoryItem.serializer)
@@ -15,6 +16,9 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(CategoryItem)]),
           () => new ListBuilder<CategoryItem>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(String)]),
+          () => new ListBuilder<String>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(TransactionItem)]),
           () => new ListBuilder<TransactionItem>()))

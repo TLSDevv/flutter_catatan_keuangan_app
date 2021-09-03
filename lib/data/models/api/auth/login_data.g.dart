@@ -8,14 +8,17 @@ part of login_data;
 
 class _$LoginData extends LoginData {
   @override
-  final String? username;
+  final String username;
   @override
-  final String? password;
+  final String password;
 
   factory _$LoginData([void Function(LoginDataBuilder)? updates]) =>
       (new LoginDataBuilder()..update(updates)).build();
 
-  _$LoginData._({this.username, this.password}) : super._();
+  _$LoginData._({required this.username, required this.password}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(username, 'LoginData', 'username');
+    BuiltValueNullFieldError.checkNotNull(password, 'LoginData', 'password');
+  }
 
   @override
   LoginData rebuild(void Function(LoginDataBuilder) updates) =>
@@ -82,8 +85,12 @@ class LoginDataBuilder implements Builder<LoginData, LoginDataBuilder> {
 
   @override
   _$LoginData build() {
-    final _$result =
-        _$v ?? new _$LoginData._(username: username, password: password);
+    final _$result = _$v ??
+        new _$LoginData._(
+            username: BuiltValueNullFieldError.checkNotNull(
+                username, 'LoginData', 'username'),
+            password: BuiltValueNullFieldError.checkNotNull(
+                password, 'LoginData', 'password'));
     replace(_$result);
     return _$result;
   }

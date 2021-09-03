@@ -8,16 +8,22 @@ part of register_data;
 
 class _$RegisterData extends RegisterData {
   @override
-  final String? username;
+  final String username;
   @override
-  final String? email;
+  final String email;
   @override
-  final String? password;
+  final String password;
 
   factory _$RegisterData([void Function(RegisterDataBuilder)? updates]) =>
       (new RegisterDataBuilder()..update(updates)).build();
 
-  _$RegisterData._({this.username, this.email, this.password}) : super._();
+  _$RegisterData._(
+      {required this.username, required this.email, required this.password})
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(username, 'RegisterData', 'username');
+    BuiltValueNullFieldError.checkNotNull(email, 'RegisterData', 'email');
+    BuiltValueNullFieldError.checkNotNull(password, 'RegisterData', 'password');
+  }
 
   @override
   RegisterData rebuild(void Function(RegisterDataBuilder) updates) =>
@@ -95,7 +101,12 @@ class RegisterDataBuilder
   _$RegisterData build() {
     final _$result = _$v ??
         new _$RegisterData._(
-            username: username, email: email, password: password);
+            username: BuiltValueNullFieldError.checkNotNull(
+                username, 'RegisterData', 'username'),
+            email: BuiltValueNullFieldError.checkNotNull(
+                email, 'RegisterData', 'email'),
+            password: BuiltValueNullFieldError.checkNotNull(
+                password, 'RegisterData', 'password'));
     replace(_$result);
     return _$result;
   }

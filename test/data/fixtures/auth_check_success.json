@@ -1,0 +1,5 @@
+{
+    "success": true,
+    "checked_fields": ["username"],
+    "message": "Username is available."
+}
