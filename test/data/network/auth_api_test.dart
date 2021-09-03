@@ -48,16 +48,21 @@ void main() {
         ),
       );
 
-      final loginData = LoginData((b) => b
-        ..username = 'test_user'
-        ..password = '12345');
-      final loginResponse = await _authApi.login(loginData);
+      final loginResponse = await _authApi.login(
+        LoginData(
+          (b) => b
+            ..username = 'test_user'
+            ..password = '12345',
+        ),
+      );
 
       expect(loginResponse, TypeMatcher<AuthResultSuccess>());
       expect(loginResponse?.success, isTrue);
-      expect(loginResponse?.message, 'Login successful');
-      expect(loginResponse?.tokenAuth,
-          'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkd2NAZHdlYnNpdGUuY29tIiwic3ViIjoiZHdjQGR3ZWJzaXRlLmNvbSIsImV4cCI6MTYzMDU4NTQ4NywidWlkIjoieHh4X19fMCIsIm93bmVyX3V1aWQiOiJ4eHgiLCJjbGllbnRfdXVpZCI6Inh4eCIsImNsaWVudF91cmwiOiJ4eHgiLCJjbGllbnRfc3NvX2VtYWlsIjoieHh4IiwiY2xpZW50X3VzZXJfaWQiOjAsImNsaWVudF91c2VybmFtZSI6Inh4eCIsImNsaWVudF9yb2xlX2NvZGUiOiJ4eHgiLCJjbGllbnRfdHlwZV9yZWdpc3RlciI6Inh4eCIsImNsaWVudF91cmxfYWRtaW4iOiJ4eHgiLCJjbGllbnRfdXJsX2FkbWluX3F1ZXJ5IjoieHh4IiwiY2xpZW50X3NjaG9vbF9pZCI6Inh4eCJ9.UKEv8v1Cwzi-6dCtmIm2M99rWI6vb72YBDMd8DGTuls');
+      expect(loginResponse?.message, equals('Login successful'));
+      expect(
+        loginResponse?.tokenAuth,
+        startsWith('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9'),
+      );
 
       verify(
         _mockHttp.post(
@@ -268,8 +273,8 @@ void main() {
       expect(checkUsername?.success, isTrue);
       expect(checkUsername?.checkedFields, TypeMatcher<BuiltList<String>>());
       expect(checkUsername?.checkedFields?.length, 1);
-      expect(checkUsername?.checkedFields?.first, 'email');
-      expect(checkUsername?.message, startsWith('Email is available'));
+      expect(checkUsername?.checkedFields?.first, equals('email'));
+      expect(checkUsername?.message, equals('Email is available.'));
 
       verify(_mockHttp.get(any, headers: anyNamed('headers')));
     });
@@ -330,6 +335,105 @@ void main() {
           throwsA(TypeMatcher<UnknownErrorException>()));
 
       verify(_mockHttp.get(any, headers: anyNamed('headers')));
+    });
+  });
+
+  group('register', () {
+    test('return AuthResultSuccess if successfuly registered.', () async {
+      when(
+        _mockHttp.post(
+          defineUri('/auth/register'),
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8'
+          },
+          body: jsonEncode(
+            <String, String>{
+              'username': 'test_user',
+              'email': 'test@example.com',
+              'password': '12345',
+            },
+          ),
+        ),
+      ).thenAnswer(
+        (_) async => http.Response(
+          fixtures('auth_register_success_response'),
+          200,
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8'
+          },
+        ),
+      );
+
+      final registerResponse = await _authApi.register(
+        RegisterData(
+          (b) => b
+            ..username = 'test_user'
+            ..email = 'test@example.com'
+            ..password = '12345',
+        ),
+      );
+
+      expect(registerResponse, TypeMatcher<AuthResultSuccess>());
+      expect(registerResponse?.success, isTrue);
+      expect(registerResponse?.message, equals('Register successful.'));
+      expect(
+        registerResponse?.tokenAuth,
+        startsWith('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9'),
+      );
+
+      verify(
+        _mockHttp.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      );
+    });
+
+    test('throws UnknownErrorException if returns status code other than 200',
+        () {
+      when(
+        _mockHttp.post(
+          defineUri('/auth/register'),
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8'
+          },
+          body: jsonEncode(
+            <String, String>{
+              'username': 'test_user',
+              'email': 'test@example.com',
+              'password': '12345',
+            },
+          ),
+        ),
+      ).thenAnswer(
+        (_) async => http.Response(
+          fixtures('internal_server_error'),
+          500,
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8'
+          },
+        ),
+      );
+
+      expect(
+          () async => await _authApi.register(
+                RegisterData(
+                  (b) => b
+                    ..username = 'test_user'
+                    ..email = 'test@example.com'
+                    ..password = '12345',
+                ),
+              ),
+          throwsA(TypeMatcher<UnknownErrorException>()));
+
+      verify(
+        _mockHttp.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      );
     });
   });
 }

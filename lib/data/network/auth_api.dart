@@ -99,9 +99,7 @@ class AuthApi {
   /// Throws an [UnknownErrorException] if server not returns either **200 OK** or **401 Unauthorized**.
   /// For example server returns **500 Internal Server Error**, we will classify this as *unknown error*.
   Future<AuthResultSuccess?> register(RegisterData registerData) async {
-    final urlRaw = '$BASE_URL/auth/register';
-    final urlEncoded = Uri.encodeFull(urlRaw);
-
+    final uriEncoded = Uri.https('$BASE_URL', '/auth/register');
     final headers = {
       HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8'
     };
@@ -112,7 +110,7 @@ class AuthApi {
       'password': registerData.password
     };
     final response = await _http.post(
-      Uri.parse(urlEncoded),
+      uriEncoded,
       headers: headers,
       body: jsonEncode(body),
     );
