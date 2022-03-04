@@ -1,5 +1,0 @@
-{
-    "success": false,
-    "checked_fields": ["email"],
-    "message": "Email is already in use."
-}
