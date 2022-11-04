@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 void main() {
   runApp(const MyApp());
@@ -73,7 +74,17 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: TextKeren(text: 'test'),
+        centerTitle: true,
+        actions: [
+          TextButton(
+              onPressed: () {
+                print('test');
+              },
+              child: const Text('terserah')),
+          ElevatedButton(
+              onPressed: () {}, child: const Icon(FontAwesomeIcons.addressCard))
+        ],
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -110,6 +121,33 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+      bottomNavigationBar: BottomNavigationBar(items: const [
+        BottomNavigationBarItem(icon: Icon(Icons.access_alarm))
+      ]),
     );
+  }
+}
+
+class TextKeren extends StatefulWidget {
+  final String? text;
+
+  TextKeren({@required this.text});
+
+  @override
+  State<TextKeren> createState() => _TextKerenState();
+}
+
+class _TextKerenState extends State<TextKeren> {
+  String? text2 = '';
+  void gantiTeks(String? textWidget) {
+    setState(() {
+      text2 = textWidget;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    throw GestureDetector(
+        onTap: () => gantiTeks(widget.text), child: Text(text2!));
   }
 }
